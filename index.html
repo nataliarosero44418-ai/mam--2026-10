@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feliz Día Mamá ❤️</title>
+
+  <!-- ================================================
+       TIPOGRAFÍAS — puedes cambiarlas en este link
+       ================================================ -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400&family=Great+Vibes&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================
+       VARIABLES DE COLOR — edita aquí la paleta
+       ============================================ */
+    :root {
+      --rose:       #f5c6cb;
+      --rose-deep:  #d4848f;
+      --rose-dark:  #a85a68;
+      --gold:       #c9a96e;
+      --gold-light: #e8d5b0;
+      --cream:      #fdf6ee;
+      --beige:      #f0e6d3;
+      --white:      #ffffff;
+      --brown:      #6b4c3b;
+      --text:       #4a3728;
+      --shadow:     rgba(168, 90, 104, 0.15);
+    }
+
+    /* ============================================
+       RESET Y BASE
+       ============================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ============================================
+       CURSOR PERSONALIZADO
+       ============================================ */
+    body { cursor: none; }
+    #cursor {
+      width: 12px; height: 12px;
+      background: var(--rose-deep);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease, opacity 0.15s;
+      mix-blend-mode: multiply;
+    }
+    #cursor-ring {
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--rose-deep);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      transition: transform 0.4s ease, left 0.12s ease, top 0.12s ease;
+      opacity: 0.5;
+    }
+
+    /* ============================================
+       PANTALLA DE BIENVENIDA
+       ============================================ */
+    #welcome {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, #fdf0f3 0%, #fce8d5 50%, #fdf6ee 100%);
+      transition: opacity 1.2s cubic-bezier(0.4,0,0.2,1), transform 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    #welcome.hide {
+      opacity: 0;
+      transform: scale(1.04);
+      pointer-events: none;
+    }
+
+    /* Canvas de partículas */
+    #particles-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .welcome-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 2rem;
+      animation: fadeUp 1.4s cubic-bezier(0.4,0,0.2,1) both;
+    }
+
+    .welcome-eyebrow {
+      font-family: 'Jost', sans-serif;
+      font-weight: 200;
+      font-size: clamp(0.7rem, 2vw, 0.85rem);
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 1s 0.3s both;
+    }
+
+    .welcome-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(3.5rem, 12vw, 7rem);
+      color: var(--rose-dark);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 1s 0.6s both;
+      text-shadow: 0 4px 30px rgba(168,90,104,0.2);
+    }
+
+    .welcome-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 3.5vw, 1.4rem);
+      color: var(--brown);
+      font-weight: 300;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 1s 0.9s both;
+      line-height: 1.6;
+    }
+
+    .btn-open {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 1rem 2.5rem;
+      border: 1.5px solid var(--rose-dark);
+      border-radius: 100px;
+      background: transparent;
+      color: var(--rose-dark);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: none;
+      transition: all 0.4s ease;
+      opacity: 0;
+      animation: fadeUp 1s 1.2s both;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-open::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--rose-dark);
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+      border-radius: 100px;
+    }
+    .btn-open:hover::before { transform: translateY(0); }
+    .btn-open:hover { color: var(--white); }
+    .btn-open span, .btn-open svg { position: relative; z-index: 1; }
+
+    /* Orbe decorativo */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .orb-1 { width: 400px; height: 400px; background: var(--rose); top: -10%; left: -10%; }
+    .orb-2 { width: 300px; height: 300px; background: var(--gold-light); bottom: -5%; right: -5%; }
+    .orb-3 { width: 200px; height: 200px; background: var(--rose-deep); top: 40%; right: 5%; }
+
+    /* ============================================
+       ANIMACIÓN DE APERTURA DE CARTA
+       ============================================ */
+    #letter-open-anim {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      background: var(--cream);
+    }
+    #letter-open-anim.playing { opacity: 1; pointer-events: all; }
+
+    .envelope-wrap {
+      position: relative;
+      width: min(340px, 85vw);
+      transform: scale(0.6);
+      transition: transform 0.8s cubic-bezier(0.4,0,0.2,1), opacity 0.6s;
+      opacity: 0;
+    }
+    #letter-open-anim.playing .envelope-wrap { transform: scale(1); opacity: 1; }
+
+    .envelope-svg { width: 100%; }
+
+    /* ============================================
+       MAIN — carta principal
+       ============================================ */
+    #main {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+    #main.visible { opacity: 1; transform: translateY(0); }
+
+    /* ============================================
+       HERO SECTION
+       ============================================ */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 2rem 3rem;
+      position: relative;
+      background: linear-gradient(180deg, #fdf0f3 0%, var(--cream) 100%);
+    }
+
+    .hero-label {
+      font-family: 'Jost', sans-serif;
+      font-weight: 200;
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2rem;
+    }
+
+    /* ================================================
+       FOTO PRINCIPAL — cambia la URL aquí
+       Para usar tu foto:
+       1) Opción A: reemplaza el src del <img id="main-photo">
+          con la URL de tu imagen en línea
+       2) Opción B: convierte la imagen a base64 y pégala
+          como src="data:image/jpeg;base64,TU_BASE64"
+       ================================================ */
+    .photo-frame {
+      position: relative;
+      width: min(320px, 80vw);
+      aspect-ratio: 3/4;
+      margin: 0 auto 2.5rem;
+    }
+    .photo-frame::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border: 1.5px solid var(--gold);
+      border-radius: 16px;
+      opacity: 0.6;
+      transition: opacity 0.4s;
+    }
+    .photo-frame::after {
+      content: '';
+      position: absolute;
+      inset: -16px;
+      border: 1px solid var(--gold-light);
+      border-radius: 20px;
+      opacity: 0.4;
+      transition: opacity 0.4s;
+    }
+    .photo-frame:hover::before { opacity: 1; }
+    .photo-frame:hover::after  { opacity: 0.7; }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.4,0,0.2,1), filter 0.4s;
+      filter: sepia(8%) contrast(1.03) brightness(1.02);
+    }
+    .photo-frame:hover img { transform: scale(1.025); filter: sepia(0%) contrast(1.05) brightness(1.03); }
+
+    .photo-corner {
+      position: absolute;
+      width: 18px; height: 18px;
+      border-color: var(--gold);
+      border-style: solid;
+      opacity: 0.8;
+    }
+    .photo-corner.tl { top: -4px; left: -4px; border-width: 2px 0 0 2px; border-radius: 3px 0 0 0; }
+    .photo-corner.tr { top: -4px; right: -4px; border-width: 2px 2px 0 0; border-radius: 0 3px 0 0; }
+    .photo-corner.bl { bottom: -4px; left: -4px; border-width: 0 0 2px 2px; border-radius: 0 0 0 3px; }
+    .photo-corner.br { bottom: -4px; right: -4px; border-width: 0 2px 2px 0; border-radius: 0 0 3px 0; }
+
+    .hero-date {
+      font-family: 'Jost', sans-serif;
+      font-weight: 200;
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-top: 0.5rem;
+    }
+
+    /* ============================================
+       DIVIDER FLORAL
+       ============================================ */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 3rem auto;
+      max-width: 300px;
+      color: var(--gold);
+      opacity: 0.6;
+    }
+    .divider-line { flex: 1; height: 1px; background: var(--gold); opacity: 0.4; }
+    .divider-icon { font-size: 1rem; }
+
+    /* ============================================
+       SECCIÓN DE MENSAJE
+       ============================================ */
+    .message-section {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 2rem 4rem;
+    }
+
+    .message-heading {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2.2rem, 8vw, 3.5rem);
+      color: var(--rose-dark);
+      text-align: center;
+      margin-bottom: 2.5rem;
+      line-height: 1.2;
+    }
+
+    /* ================================================
+       MENSAJE EMOTIVO — edita el texto aquí
+       El texto está dentro de los párrafos <p> con
+       class="message-para" dentro de <div id="msg-body">
+       ================================================ */
+    .message-body {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.05rem, 3vw, 1.2rem);
+      line-height: 1.95;
+      color: var(--brown);
+      font-weight: 400;
+    }
+    .message-body p { margin-bottom: 1.6rem; }
+    .message-body .dropcap::first-letter {
+      font-family: 'Great Vibes', cursive;
+      font-size: 4em;
+      float: left;
+      line-height: 0.75;
+      margin: 0.08em 0.12em 0 0;
+      color: var(--rose-dark);
+    }
+    .message-body em {
+      font-style: italic;
+      color: var(--rose-dark);
+    }
+
+    /* ============================================
+       GALERÍA POLAROID
+       ============================================ */
+    .gallery-section {
+      padding: 3rem 1.5rem 5rem;
+      background: linear-gradient(180deg, var(--cream) 0%, #fdf0f3 100%);
+    }
+
+    .gallery-section h2 {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2rem, 7vw, 3rem);
+      color: var(--rose-dark);
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ================================================
+       FOTOS DE GALERÍA — cambia las URLs o base64
+       Busca los <img> con class="polaroid-img" dentro
+       de cada .polaroid y cambia el src
+       ================================================ */
+    .polaroid {
+      background: var(--white);
+      padding: 0.7rem 0.7rem 2.2rem;
+      border-radius: 3px;
+      box-shadow: 0 8px 30px var(--shadow), 0 2px 8px rgba(0,0,0,0.06);
+      transform: rotate(var(--rot, 0deg));
+      transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s;
+      opacity: 0;
+      animation: fadeUp 0.8s var(--delay, 0s) both;
+    }
+    .polaroid:nth-child(1) { --rot: -2.5deg; --delay: 0.1s; }
+    .polaroid:nth-child(2) { --rot:  1.8deg; --delay: 0.25s; }
+    .polaroid:nth-child(3) { --rot:  2.2deg; --delay: 0.4s; }
+    .polaroid:nth-child(4) { --rot: -1.5deg; --delay: 0.55s; }
+
+    .polaroid:hover {
+      transform: rotate(0deg) scale(1.05);
+      box-shadow: 0 20px 50px var(--shadow), 0 4px 16px rgba(0,0,0,0.08);
+      z-index: 10;
+    }
+
+    .polaroid-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+      border-radius: 1px;
+      filter: sepia(10%) contrast(1.05) brightness(1.02);
+    }
+
+    .polaroid-caption {
+      font-family: 'Jost', sans-serif;
+      font-weight: 200;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--brown);
+      text-align: center;
+      margin-top: 0.8rem;
+      opacity: 0.75;
+    }
+
+    /* ============================================
+       FRASE FINAL
+       ============================================ */
+    .final-section {
+      padding: 5rem 2rem 6rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .final-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(245,198,203,0.3) 0%, transparent 70%);
+    }
+
+    /* ================================================
+       FRASE FINAL — edita el texto aquí
+       ================================================ */
+    .final-quote {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(2rem, 8vw, 4rem);
+      color: var(--rose-dark);
+      line-height: 1.3;
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 4px 20px rgba(168,90,104,0.15);
+      max-width: 700px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .final-signature {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================================
+       BOTÓN DE MÚSICA
+       ============================================ */
+    #music-btn {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 500;
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      border: 1.5px solid var(--rose-dark);
+      background: rgba(253,246,238,0.9);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px var(--shadow);
+      opacity: 0;
+    }
+    #music-btn.visible { opacity: 1; }
+    #music-btn:hover { background: var(--rose-dark); }
+    #music-btn:hover svg { color: white; }
+    #music-btn svg { color: var(--rose-dark); transition: color 0.3s; width: 20px; height: 20px; }
+
+    #music-btn .music-ring {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 1px solid var(--rose);
+      animation: pulse-ring 2s infinite;
+      opacity: 0;
+    }
+    #music-btn.playing .music-ring { opacity: 1; }
+
+    /* ============================================
+       CORAZONES FLOTANTES
+       ============================================ */
+    .heart-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 600;
+      font-size: 1rem;
+      animation: floatHeart 4s ease-in both;
+      opacity: 0;
+    }
+
+    /* ============================================
+       SCROLL PROGRESS
+       ============================================ */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--rose-deep), var(--gold));
+      z-index: 800;
+      width: 0%;
+      transition: width 0.1s;
+    }
+
+    /* ============================================
+       KEYFRAMES
+       ============================================ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes floatHeart {
+      0%   { opacity: 0.8; transform: translateY(0) scale(1) rotate(0deg); }
+      100% { opacity: 0;   transform: translateY(-200px) scale(0.5) rotate(20deg); }
+    }
+    @keyframes pulse-ring {
+      0%   { transform: scale(1); opacity: 0.7; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position:  200% center; }
+    }
+
+    /* ============================================
+       REVEAL ANIMATION (scroll)
+       ============================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.9s cubic-bezier(0.4,0,0.2,1),
+                  transform 0.9s cubic-bezier(0.4,0,0.2,1);
+    }
+    .reveal.shown { opacity: 1; transform: translateY(0); }
+
+    /* ============================================
+       RESPONSIVE
+       ============================================ */
+    @media (max-width: 480px) {
+      .gallery-grid { gap: 1rem; }
+      .message-section { padding: 1.5rem 1.5rem 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ====== BARRA DE PROGRESO ====== -->
+<div id="progress-bar"></div>
+
+<!-- ====== CURSOR PERSONALIZADO ====== -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- ====================================================
+     PANTALLA DE BIENVENIDA
+     Edita el texto principal y subtítulo aquí
+     ==================================================== -->
+<section id="welcome">
+  <canvas id="particles-canvas"></canvas>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="welcome-content">
+    <p class="welcome-eyebrow">Un regalo con todo mi amor</p>
+
+    <!-- ====== TÍTULO PRINCIPAL ====== -->
+    <h1 class="welcome-title">Feliz Día Mamá ❤️</h1>
+
+    <!-- ====== SUBTÍTULO ====== -->
+    <p class="welcome-subtitle">
+      Para la mujer más hermosa,<br>valiente y amorosa de mi vida
+    </p>
+
+    <button class="btn-open" onclick="openLetter()">
+      <span>Abrir carta</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 4l7.07 7.07M4 4h6M4 4v6M20 20l-7.07-7.07M20 20h-6M20 20v-6"/>
+      </svg>
+    </button>
+  </div>
+</section>
+
+<!-- ====================================================
+     ANIMACIÓN DE APERTURA (sobre de carta)
+     ==================================================== -->
+<div id="letter-open-anim">
+  <div class="envelope-wrap" id="env-wrap">
+    <svg class="envelope-svg" viewBox="0 0 340 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Cuerpo del sobre -->
+      <rect x="2" y="40" width="336" height="196" rx="6" fill="#fdf6ee" stroke="#c9a96e" stroke-width="1.5"/>
+      <!-- Solapa abierta -->
+      <path id="flap" d="M2 40 L170 140 L338 40" fill="#f0e6d3" stroke="#c9a96e" stroke-width="1.5"
+            style="transform-origin:50% 40px;transition:transform 1s cubic-bezier(0.4,0,0.2,1)"/>
+      <!-- Líneas interiores del sobre -->
+      <line x1="2" y1="40" x2="170" y2="140" stroke="#c9a96e" stroke-width="0.8" opacity="0.4"/>
+      <line x1="338" y1="40" x2="170" y2="140" stroke="#c9a96e" stroke-width="0.8" opacity="0.4"/>
+      <!-- Sello decorativo -->
+      <circle cx="170" cy="190" r="22" fill="none" stroke="#c9a96e" stroke-width="1"/>
+      <text x="170" y="196" text-anchor="middle" fill="#c9a96e" font-family="serif" font-size="18">❤</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ====================================================
+     CONTENIDO PRINCIPAL DE LA CARTA
+     ==================================================== -->
+<div id="main">
+
+  <!-- ====== HERO / FOTO PRINCIPAL ====== -->
+  <section class="hero">
+    <p class="hero-label">Día de la Madre · 2026</p>
+
+    <div class="photo-frame reveal">
+      <span class="photo-corner tl"></span>
+      <span class="photo-corner tr"></span>
+      <span class="photo-corner bl"></span>
+      <span class="photo-corner br"></span>
+
+      <!-- ================================================
+           FOTO PRINCIPAL — cambia el src por la URL
+           o ruta de tu foto. Ejemplo:
+           src="foto-mama.jpg"
+           src="https://mi-sitio.com/mama.jpg"
+           ================================================ -->
+      <img
+        id="main-photo"
+        src="principal.jpeg"
+        alt="Mi mamá hermosa"
+      />
+    </div>
+
+    <p class="hero-date">Con todo mi amor ✦ Siempre</p>
+  </section>
+
+  <div class="divider reveal">
+    <span class="divider-line"></span>
+    <span class="divider-icon">✿</span>
+    <span class="divider-line"></span>
+  </div>
+
+  <!-- ====================================================
+       MENSAJE EMOTIVO
+       Edita cada párrafo según lo que quieras expresar
+       ==================================================== -->
+  <section class="message-section">
+    <h2 class="message-heading reveal">Para ti, mamá</h2>
+
+    <div class="message-body reveal" id="msg-body">
+
+      <p class="message-para dropcap">
+        Mami, celebro todos los días de tu vida, celebro tu amor y tu presencia siempre.
+         Cuando digo que no pude haber tenido una mejor mamá, créeme que es completamente verdad. 
+         Muchas veces le sonrío a la vida por haberme dado la dicha de tenerte, por ser tú quien me 
+         acoge en sus brazos cuando el mundo parece caerse en pedazos, por ser tú quien me da fuerzas 
+         para no desistir cuando siento que ya no puedo más.
+      </p>
+
+      <p class="message-para">
+        Nunca olvides que, además de ser una excelente madre, eres el sello más grande y 
+        significativo de lo que hoy en día llamamos AMOR. Agradezco infinitamente todo lo que haces por mí:
+         las risas, los enojos, las tristezas, las carcajadas, las comidas hogareñas que extraño tanto, y
+          cada pequeño momento que compartimos juntas.
+
+      </p>
+
+      <p class="message-para">
+        Pero, sobre todo, gracias mamá por amarme de la manera tan inmensa y hermosa en que lo haces, 
+        porque tu amor ha sido siempre mi refugio, mi fuerza y mi hogar.
+
+      </p>
+
+      <p class="message-para">
+        Feliz día, mujer fuerte, valiente y guerrera. Te amo infinitamente.
+      </p>
+
+    </div>
+  </section>
+
+  <div class="divider reveal">
+    <span class="divider-line"></span>
+    <span class="divider-icon">✾</span>
+    <span class="divider-line"></span>
+  </div>
+
+  <!-- ====================================================
+       GALERÍA DE RECUERDOS
+       Cambia los src de las imágenes y los textos
+       de los <p class="polaroid-caption"> por los
+       momentos o fechas que quieras recordar
+       ==================================================== -->
+  <section class="gallery-section">
+    <h2 class="reveal">Nuestros recuerdos</h2>
+
+    <div class="gallery-grid">
+
+      <!-- POLAROID 1 -->
+      <div class="polaroid">
+        <img
+          class="polaroid-img"
+          src="alternativa.jpeg"
+          alt="Recuerdo 1"
+        />
+        <p class="polaroid-caption">Momentos que atesoro</p>
+      </div>
+
+      <!-- POLAROID 2 -->
+      <div class="polaroid">
+        <img
+          class="polaroid-img"
+          src="risas.jpeg"
+          alt="Recuerdo 2"
+        />
+        <p class="polaroid-caption">Tu sonrisa me da fuerza</p>
+      </div>
+
+      <!-- POLAROID 3 -->
+      <div class="polaroid">
+        <img
+          class="polaroid-img"
+          src="juntas.jpeg"
+          alt="Recuerdo 3"
+        />
+        <p class="polaroid-caption">Juntas siempre</p>
+      </div>
+
+      <!-- POLAROID 4 -->
+      <div class="polaroid">
+        <img
+          class="polaroid-img"
+          src="por siempre.jpeg"
+          alt="Por siempre"
+        />
+        <p class="polaroid-caption">Amor eterno ❤️</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================
+       FRASE FINAL — edita el texto aquí
+       ==================================================== -->
+  <section class="final-section">
+    <p class="final-quote reveal">
+      Gracias por darme tanto amor todos los días.<br>
+      Te amo mamá ❤️
+    </p>
+    <!-- ====== TU NOMBRE — cámbialo aquí ====== -->
+    <p class="final-signature reveal">Con todo mi amor, Tu hija Natalia</p>
+  </section>
+
+</div><!-- /#main -->
+
+<!-- ====================================================
+     BOTÓN DE MÚSICA
+     Para cambiar la canción, reemplaza el src del
+     elemento <audio id="bg-music"> más abajo
+     ==================================================== -->
+<button id="music-btn" title="Reproducir música" onclick="toggleMusic()">
+  <div class="music-ring"></div>
+  <svg id="music-icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <polygon points="5 3 19 12 5 21 5 3"/>
+  </svg>
+  <svg id="music-icon-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display:none">
+    <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+  </svg>
+</button>
+
+<!-- ====================================================
+     MÚSICA DE FONDO
+     Cambia el src por la URL de tu canción favorita
+     (puede ser un archivo .mp3 local o una URL)
+     Ejemplo: src="mi-cancion.mp3"
+     ==================================================== -->
+<audio id="bg-music" loop>
+  <source src="Carlos Rivera - Eres Tú (Mamá)(mp3j.cc).mp3" type="audio/mpeg" />
+</audio>
+
+<!-- ====================================================
+     JAVASCRIPT
+     ==================================================== -->
+<script>
+/* ============================================
+   CURSOR PERSONALIZADO
+   ============================================ */
+const cursor     = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursor-ring');
+let mx = 0, my = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left     = mx - 6  + 'px';
+  cursor.style.top      = my - 6  + 'px';
+  cursorRing.style.left = mx - 18 + 'px';
+  cursorRing.style.top  = my - 18 + 'px';
+});
+
+/* ============================================
+   PARTÍCULAS EN PANTALLA DE BIENVENIDA
+   ============================================ */
+const canvas = document.getElementById('particles-canvas');
+const ctx    = canvas.getContext('2d');
+let particles = [];
+
+function resize() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+const SYMBOLS = ['✿', '❀', '✾', '❤', '·', '∘'];
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x     = Math.random() * canvas.width;
+    this.y     = canvas.height + 20;
+    this.size  = Math.random() * 14 + 8;
+    this.speed = Math.random() * 0.6 + 0.2;
+    this.drift = (Math.random() - 0.5) * 0.4;
+    this.alpha = Math.random() * 0.4 + 0.1;
+    this.sym   = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+    this.rot   = Math.random() * Math.PI * 2;
+    this.rotS  = (Math.random() - 0.5) * 0.02;
+  }
+  update() {
+    this.y   -= this.speed;
+    this.x   += this.drift;
+    this.rot += this.rotS;
+    if (this.y < -30) this.reset();
+  }
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rot);
+    ctx.font = `${this.size}px serif`;
+    ctx.fillStyle = '#d4848f';
+    ctx.textAlign  = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(this.sym, 0, 0);
+    ctx.restore();
+  }
+}
+
+for (let i = 0; i < 55; i++) {
+  const p = new Particle();
+  p.y = Math.random() * canvas.height; // start spread
+  particles.push(p);
+}
+
+function animParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animParticles);
+}
+animParticles();
+
+/* ============================================
+   APERTURA DE CARTA
+   ============================================ */
+function openLetter() {
+  const welcome  = document.getElementById('welcome');
+  const anim     = document.getElementById('letter-open-anim');
+  const envWrap  = document.getElementById('env-wrap');
+  const flap     = document.getElementById('flap');
+  const main     = document.getElementById('main');
+  const musicBtn = document.getElementById('music-btn');
+
+  // 1. Ocultar bienvenida
+  welcome.classList.add('hide');
+
+  setTimeout(() => {
+    // 2. Mostrar animación de sobre
+    anim.classList.add('playing');
+    welcome.style.display = 'none';
+
+    setTimeout(() => {
+      // 3. Abrir solapa del sobre
+      flap.style.transform = 'rotateX(-180deg)';
+      flap.style.opacity   = '0.3';
+
+      setTimeout(() => {
+        // 4. Sobre desaparece
+        envWrap.style.opacity   = '0';
+        envWrap.style.transform = 'scale(0.9) translateY(-20px)';
+
+        setTimeout(() => {
+          anim.style.display = 'none';
+
+          // 5. Mostrar contenido
+          main.classList.add('visible');
+          musicBtn.classList.add('visible');
+
+          // 6. Lanzar corazones
+          launchHearts();
+
+          // Activar reveals
+          initReveals();
+        }, 600);
+      }, 800);
+    }, 400);
+  }, 700);
+}
+
+/* ============================================
+   CORAZONES FLOTANTES
+   ============================================ */
+function launchHearts() {
+  const hearts = ['❤️','💕','💗','🌸','✿','💖'];
+  for (let i = 0; i < 18; i++) {
+    setTimeout(() => {
+      const h = document.createElement('div');
+      h.className = 'heart-particle';
+      h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.bottom = '10vh';
+      h.style.fontSize = (Math.random() * 1.2 + 0.6) + 'rem';
+      h.style.animationDuration = (Math.random() * 2 + 2.5) + 's';
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 5000);
+    }, i * 150);
+  }
+}
+
+/* ============================================
+   SCROLL REVEALS
+   ============================================ */
+function initReveals() {
+  const els = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('shown'); } });
+  }, { threshold: 0.15 });
+  els.forEach(el => obs.observe(el));
+  // Check initial viewport
+  els.forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.top < window.innerHeight * 0.9) el.classList.add('shown');
+  });
+}
+
+/* ============================================
+   BARRA DE PROGRESO
+   ============================================ */
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  const total    = document.body.scrollHeight - window.innerHeight;
+  const pct      = total > 0 ? (scrolled / total) * 100 : 0;
+  document.getElementById('progress-bar').style.width = pct + '%';
+});
+
+/* ============================================
+   MÚSICA
+   ============================================ */
+const music     = document.getElementById('bg-music');
+const playIcon  = document.getElementById('music-icon-play');
+const pauseIcon = document.getElementById('music-icon-pause');
+const musicBtn  = document.getElementById('music-btn');
+music.volume    = 0.35;
+
+function toggleMusic() {
+  if (music.paused) {
+    music.play().catch(() => {});
+    playIcon.style.display  = 'none';
+    pauseIcon.style.display = 'block';
+    musicBtn.classList.add('playing');
+  } else {
+    music.pause();
+    playIcon.style.display  = 'block';
+    pauseIcon.style.display = 'none';
+    musicBtn.classList.remove('playing');
+  }
+}
+
+/* ============================================
+   CORAZONES AL HACER CLICK (bonus)
+   ============================================ */
+document.addEventListener('click', (e) => {
+  if (e.target.closest('#welcome') || e.target.closest('#letter-open-anim')) return;
+  const h = document.createElement('div');
+  h.className = 'heart-particle';
+  h.textContent = '❤️';
+  h.style.left = e.clientX + 'px';
+  h.style.top  = e.clientY + 'px';
+  h.style.position = 'fixed';
+  h.style.fontSize = '1rem';
+  h.style.animationDuration = '1.5s';
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 2000);
+});
+</script>
+
+</body>
+</html>
